@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://cet5iba23csx6"]
+
+[ext_resource type="Script" path="res://ui.gd" id="1_h781s"]
+[ext_resource type="Texture2D" uid="uid://cvo42w1exw2jg" path="res://assets/sprites/white.png" id="2_3qp1t"]
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_h781s")
+
+[node name="end_of_game_screen" type="Node2D" parent="."]
+position = Vector2(265, 298)
+
+[node name="RestartButton" type="Button" parent="end_of_game_screen"]
+self_modulate = Color(1, 1, 1, 0)
+offset_left = 125.0
+offset_top = -41.0
+offset_right = 133.0
+offset_bottom = -33.0
+scale = Vector2(-31.3178, 10.6648)
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="end_of_game_screen/RestartButton"]
+position = Vector2(3.99134, 3.75067)
+scale = Vector2(0.0164507, 0.146276)
+texture = ExtResource("2_3qp1t")
+
+[node name="Label" type="Label" parent="end_of_game_screen/RestartButton/Sprite2D"]
+offset_left = 223.214
+offset_top = -12.8206
+offset_right = 358.214
+offset_bottom = 10.1794
+scale = Vector2(-3.19255, 1.05128)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "You died! Replay?"
+metadata/_edit_use_anchors_ = true
+
+[node name="end_game_score_display" type="Node2D" parent="end_of_game_screen"]
+
+[node name="Sprite2D" type="Sprite2D" parent="end_of_game_screen/end_game_score_display"]
+position = Vector2(1, -106)
+scale = Vector2(0.2, 1.56)
+texture = ExtResource("2_3qp1t")
+
+[node name="points" type="Label" parent="end_of_game_screen/end_game_score_display"]
+offset_left = -22.0
+offset_top = -165.0
+offset_right = 18.0
+offset_bottom = -142.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "0"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="end_of_game_screen/RestartButton" to="." method="_on_restart_button_pressed"]
