@@ -1,0 +1,327 @@
+[gd_scene load_steps=20 format=3 uid="uid://cs42xb8xj0o8d"]
+
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_xd3o3"]
+[ext_resource type="PackedScene" uid="uid://bh686iv16ckag" path="res://scenes/kill_zone_top.tscn" id="2_ixrk2"]
+[ext_resource type="Script" path="res://scripts/game_manager.gd" id="3_4k8vk"]
+[ext_resource type="PackedScene" uid="uid://ddqjtljek7fef" path="res://scenes/player.tscn" id="4_dq8pg"]
+[ext_resource type="Script" path="res://scripts/areas.gd" id="5_i0n7e"]
+[ext_resource type="PackedScene" uid="uid://c5vn2udlsatrl" path="res://scenes/platform.tscn" id="6_bljoy"]
+[ext_resource type="PackedScene" uid="uid://c2orjv50kpws1" path="res://scenes/coin.tscn" id="7_lq1cs"]
+[ext_resource type="FontFile" uid="uid://c4t3f3bgh8qyh" path="res://assets/fonts/PixelOperator8.ttf" id="8_bq878"]
+[ext_resource type="PackedScene" uid="uid://b8ddb25wxqxk8" path="res://scenes/slimev_4.tscn" id="9_w8tab"]
+[ext_resource type="Script" path="res://scripts/slimev_4.gd" id="10_2y2uo"]
+[ext_resource type="PackedScene" uid="uid://cxklsamsm7j1x" path="res://scenes/spike_final.tscn" id="11_af8pr"]
+[ext_resource type="Script" path="res://scripts/spike_final.gd" id="12_eakaq"]
+[ext_resource type="PackedScene" uid="uid://b4efhmv1cke50" path="res://game_flag.tscn" id="13_gxrbk"]
+[ext_resource type="Script" path="res://game_flag.gd" id="14_etasm"]
+[ext_resource type="Texture2D" uid="uid://dxr0k8q5vprmo" path="res://assets/sprites/black background.png" id="15_oytnm"]
+[ext_resource type="Script" path="res://scenes/draw_grid.gd" id="15_p0u1m"]
+[ext_resource type="Script" path="res://scripts/camera_2d.gd" id="16_gbyur"]
+[ext_resource type="PackedScene" uid="uid://cet5iba23csx6" path="res://scenes/ui.tscn" id="17_tkvw5"]
+
+[sub_resource type="GDScript" id="GDScript_26ydf"]
+script/source = "extends Area2D
+@onready var game_manager: Node = %GameManager
+
+func _ready():
+	pass
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		print(\"Killzone triggered by:\", body.name)
+		body.get_node(\"CollisionShape2D\").queue_free()
+		#timer.start()
+		print('gamemanager', game_manager)
+		game_manager.game_over(\"Fail\")
+"
+
+[node name="Game" type="Node2D"]
+position = Vector2(-13, 33)
+script = ExtResource("1_xd3o3")
+
+[node name="KillZoneBorder" parent="." instance=ExtResource("2_ixrk2")]
+position = Vector2(450, 122)
+scale = Vector2(0.3, 0.3)
+collision_layer = 3
+collision_mask = 3
+script = SubResource("GDScript_26ydf")
+
+[node name="KillZoneBorder2" parent="." instance=ExtResource("2_ixrk2")]
+position = Vector2(445, 305)
+scale = Vector2(0.3, 0.3)
+collision_layer = 3
+collision_mask = 3
+script = SubResource("GDScript_26ydf")
+
+[node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_4k8vk")
+
+[node name="Player" parent="." instance=ExtResource("4_dq8pg")]
+position = Vector2(220, 186)
+collision_mask = 1
+
+[node name="Areas" type="Node" parent="."]
+script = ExtResource("5_i0n7e")
+
+[node name="StartPlatform" parent="Areas" instance=ExtResource("6_bljoy")]
+position = Vector2(224, 271)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="Coin" parent="Areas" instance=ExtResource("7_lq1cs")]
+position = Vector2(284, 187)
+
+[node name="ScoreLabel" type="Label" parent="Areas"]
+visible = false
+offset_left = 279.0
+offset_top = 143.0
+offset_right = 415.0
+offset_bottom = 154.0
+scale = Vector2(1, 1.04)
+theme_override_colors/font_color = Color(0.651279, 0.787596, 0.994536, 1)
+theme_override_fonts/font = ExtResource("8_bq878")
+theme_override_font_sizes/font_size = 8
+text = "0 Coins"
+metadata/_edit_use_anchors_ = true
+
+[node name="platform2" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(224, 262)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p3" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(224, 302)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p4" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(308, 286)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform3" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(211, 369)
+rotation = -3.14159
+scale = Vector2(0.958018, -0.40539)
+
+[node name="p5" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(219, 414)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p6" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(286, 374)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform4" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(265, 419)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p8" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(310, 438)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform5" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(223, 524)
+rotation = -3.14159
+scale = Vector2(0.958018, -0.40539)
+
+[node name="p9" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(240, 600)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p10" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(292, 545)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform6" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(242, 615)
+rotation = -3.14159
+scale = Vector2(1.00259, -0.391719)
+
+[node name="p11" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(242, 655)
+rotation = -3.14159
+scale = Vector2(0.758019, -0.40539)
+
+[node name="p12" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(326, 639)
+rotation = -3.14159
+scale = Vector2(2.15381, -0.405393)
+
+[node name="platform7" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(229, 722)
+rotation = -3.14159
+scale = Vector2(0.958018, -0.40539)
+
+[node name="p13" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(237, 767)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.405017)
+
+[node name="p14" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(304, 727)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform8" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(288, 775)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p15" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(205, 830)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p16" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(302, 794)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="platform9" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(270, 879)
+rotation = -3.14159
+scale = Vector2(0.958018, -0.40539)
+
+[node name="p17" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(258, 953)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="p18" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(310, 898)
+rotation = -3.14159
+scale = Vector2(0.673812, -0.405393)
+
+[node name="p7" parent="Areas" instance=ExtResource("6_bljoy")]
+visible = false
+position = Vector2(266, 463)
+rotation = -3.14159
+scale = Vector2(3.35802, -0.40539)
+
+[node name="slimev4" parent="Areas" instance=ExtResource("9_w8tab")]
+visible = false
+position = Vector2(276, 461)
+collision_mask = 2
+script = ExtResource("10_2y2uo")
+
+[node name="Coin3" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(257, 490)
+
+[node name="Coin4" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(315, 705)
+
+[node name="Coin5" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(301, 275)
+
+[node name="Coin6" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(201, 254)
+
+[node name="Coin7" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(313, 456)
+
+[node name="Coin8" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(218, 608)
+
+[node name="Coin9" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(205, 425)
+
+[node name="Coin10" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(315, 574)
+
+[node name="Coin11" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(236, 665)
+
+[node name="Coin12" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(302, 785)
+
+[node name="SpikeFinal" parent="Areas" instance=ExtResource("11_af8pr")]
+visible = false
+position = Vector2(223, 310)
+collision_mask = 2
+script = ExtResource("12_eakaq")
+
+[node name="GameFlag" parent="Areas" instance=ExtResource("13_gxrbk")]
+visible = false
+position = Vector2(365, 1169)
+scale = Vector2(0.3, 0.3)
+collision_mask = 2
+script = ExtResource("14_etasm")
+
+[node name="Coin2" parent="Areas" instance=ExtResource("7_lq1cs")]
+visible = false
+position = Vector2(284, 187)
+
+[node name="drawGrid" type="Node2D" parent="Areas"]
+script = ExtResource("15_p0u1m")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2(263, 252)
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+offset_left = -235.0
+offset_top = -159.0
+offset_right = 526.0
+offset_bottom = 460.0
+texture = ExtResource("15_oytnm")
+stretch_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="MainCamera" type="Camera2D" parent="."]
+position = Vector2(269, 208)
+zoom = Vector2(4, 4)
+script = ExtResource("16_gbyur")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="UI" parent="." instance=ExtResource("17_tkvw5")]
+visible = false
+
+[connection signal="body_entered" from="KillZoneBorder" to="KillZoneBorder" method="_on_body_entered"]
+[connection signal="body_entered" from="KillZoneBorder2" to="KillZoneBorder2" method="_on_body_entered"]
+[connection signal="body_entered" from="Areas/slimev4" to="Areas/slimev4" method="_on_body_entered"]
+[connection signal="body_entered" from="Areas/SpikeFinal" to="Areas/SpikeFinal" method="_on_body_entered"]
+[connection signal="body_entered" from="Areas/GameFlag" to="Areas/GameFlag" method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="Areas" method="_on_spawn_timer_timeout"]

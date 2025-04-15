@@ -1,18 +1,13 @@
 extends Node2D
 var platform = preload('res://scenes/platformtwo.tscn')
-var speed = 42
+var EnemyPlat = preload('res://MiniScenesFolder/EnemyPlat.tscn')
+var speed = 0
 var platforms = []
 var CanScroll = false
+var List = [platform, EnemyPlat]
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
-		
-	#for y in range(300):
-	#	pass
-	#	var new_platform = platform.instance()
-		#new_platform.set_position(Vector2(0,y))
-		#add_child(new_platform)
-		#y -= randf_range(0,210)# Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous
