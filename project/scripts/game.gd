@@ -1,7 +1,7 @@
 extends Node2D
 var platform = preload('res://scenes/platformtwo.tscn')
-var EnemyPlat = preload('res://MiniScenesFolder/EnemyPlat.tscn')
-var speed = 43
+var EnemyPlat = preload("res://scenes/EnemyPlat.tscn")
+var speed = 10
 var platforms = []
 var CanScroll = false
 var List = [platform, EnemyPlat]
@@ -14,7 +14,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	#pass
 	if (CanScroll == false):
-		for area in $Areas.get_children():
+		for area in $ScrollArea.get_children():
 			if not area is Label:
 				area.position.y -= speed*delta
 				

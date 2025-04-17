@@ -4,14 +4,11 @@ var screen_size: Vector2
 #var camera_height = 800
 var platform = preload('res://scenes/platform.tscn')
 var coin = preload("res://scenes/coin.tscn")
-var EnemyPlat = preload('res://MiniScenesFolder/EnemyPlat.tscn')
-var speed = 30
+var EnemyPlat = preload("res://scenes/EnemyPlat.tscn")
 var spawn_interval = 1.0
 var spawn_timer: Timer
 var spawned_positions = []
 @onready var score_label: Label = $ScoreLabel
-
-
 @onready var main_camera: Camera2D = $"../MainCamera"
 @onready var delay_timer: Timer = $DelayTimer
 
@@ -27,9 +24,9 @@ var object_offset := Vector2(0, 0)
 var platforms = []
 var CanScroll = false
 var items = [
-	{"obj": EnemyPlat, "chance": 0.5, "size": Vector2(16, 2)},
-	{"obj": platform, "chance": 0.7, "size": Vector2(4, 4)},
-	{"obj": coin, "chance": 0.3, "size": Vector2(4, 4)}
+	{"obj": EnemyPlat, "chance": 0.5, "size": Vector2(4, 4)},
+	#{"obj": platform, "chance": 0.7, "size": Vector2(4, 4)},
+	#{"obj": coin, "chance": 0.3, "size": Vector2(4, 4)}
 ]
 var grid_origin := Vector2i.ZERO
 var score = 0
@@ -37,17 +34,18 @@ var score = 0
 func _ready():
 	randomize()
 	center_on_camera()
-	var item = pick_weighted_item()
-	var grid_coords = Vector2i(1, 1)
-	var obj_scene = item["obj"]
-	var size = item["size"]
 
-	var new_obj = obj_scene.instantiate()
-	new_obj.position = get_aligned_grid_position(grid_coords, size)
+	for y in rows:
+		for x in columns:
+			var grid_coords = Vector2i(x, y)
+			var item = pick_weighted_item()
+			var obj_scene = item["obj"]
+			var size = item["size"]
+
+			var new_obj = obj_scene.instantiate()
+			new_obj.position = get_aligned_grid_position(grid_coords, size)
+			add_child(new_obj)
 	
-	await get_tree().create_timer(5.0).timeout
-	print("20 seconds passed. Now go do the thing.")
-	add_child(new_obj)
 func _on_delay_timer_timeout(new_obj):
 	print("5 seconds passed. Do something now.")
 	add_child(new_obj)

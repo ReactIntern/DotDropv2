@@ -4,8 +4,9 @@ extends Node2D
 @export var grid_color := Color(1, 1, 1, 0.2)
 @export var grid_width := 1.0
 @export var columns := 9
-@export var rows := 13
-@onready var main_camera: Camera2D = $"../../MainCamera"
+@export var rows := 25
+@onready var main_camera: Camera2D = $"../MainCamera"
+
 @export var highlight_cell := Vector2i(1, 1)
 @export var highlight_color := Color(1, 0, 0, 0.3)  # Semi-transparent red
 # Position offset for objects (will move upward)
@@ -13,7 +14,7 @@ var object_offset := Vector2(0, 0)
 var grid_origin := Vector2.ZERO
 # This function centers the grid once at the start of the scene
 func _ready():
-	
+	pass
 	center_on_camera()
 	queue_redraw()
 # Center the grid on the camera
@@ -39,7 +40,7 @@ func _draw():
 
 	# Highlight cell (e.g., (2, 8))
 	var highlight_pos = Vector2(2, 8) * grid_size + grid_origin
-	draw_rect(Rect2(highlight_pos, Vector2(grid_size, grid_size)), highlight_color)
+	#draw_rect(Rect2(highlight_pos, Vector2(grid_size, grid_size)), highlight_color)
 
 	# Optional debug dot in the center of the highlighted cell
 	draw_circle(highlight_pos + Vector2(grid_size / 2, grid_size / 2), 4, Color.RED)

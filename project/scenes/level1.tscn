@@ -15,9 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://b4efhmv1cke50" path="res://game_flag.tscn" id="13_gxrbk"]
 [ext_resource type="Script" path="res://game_flag.gd" id="14_etasm"]
 [ext_resource type="Texture2D" uid="uid://dxr0k8q5vprmo" path="res://assets/sprites/black background.png" id="15_oytnm"]
-[ext_resource type="Script" path="res://scenes/draw_grid.gd" id="15_p0u1m"]
 [ext_resource type="Script" path="res://scripts/camera_2d.gd" id="16_gbyur"]
 [ext_resource type="PackedScene" uid="uid://cet5iba23csx6" path="res://scenes/ui.tscn" id="17_tkvw5"]
+[ext_resource type="PackedScene" uid="uid://dk7qaqpuj4yhl" path="res://areaboundary_2.tscn" id="18_0ppup"]
 
 [sub_resource type="GDScript" id="GDScript_26ydf"]
 script/source = "extends Area2D
@@ -66,18 +66,10 @@ script = ExtResource("3_4k8vk")
 position = Vector2(-33, -58)
 collision_mask = 1
 
-[node name="Areas" type="Node" parent="."]
+[node name="ScrollArea" type="Node" parent="."]
 script = ExtResource("5_i0n7e")
 
-[node name="StartPlatform" parent="Areas" instance=ExtResource("6_bljoy")]
-position = Vector2(-49, -21)
-rotation = -3.14159
-scale = Vector2(1.51802, -0.40539)
-
-[node name="Coin" parent="Areas" instance=ExtResource("7_lq1cs")]
-position = Vector2(31, -57)
-
-[node name="ScoreLabel" type="Label" parent="Areas"]
+[node name="ScoreLabel" type="Label" parent="ScrollArea"]
 offset_left = 26.0
 offset_top = -101.0
 offset_right = 162.0
@@ -89,32 +81,37 @@ theme_override_font_sizes/font_size = 8
 text = "0 Coins"
 metadata/_edit_use_anchors_ = true
 
-[node name="platform2" parent="Areas" instance=ExtResource("6_bljoy")]
-position = Vector2(-24, 19)
+[node name="StartPlatform" parent="ScrollArea" instance=ExtResource("6_bljoy")]
+position = Vector2(-49, -21)
 rotation = -3.14159
 scale = Vector2(1.51802, -0.40539)
 
-[node name="slimev4" parent="Areas" instance=ExtResource("9_w8tab")]
+[node name="Coin" parent="ScrollArea" instance=ExtResource("7_lq1cs")]
+position = Vector2(-171, -37)
+
+[node name="platform2" parent="ScrollArea" instance=ExtResource("6_bljoy")]
+position = Vector2(-170, -1.90735e-06)
+rotation = -3.14159
+scale = Vector2(1.51802, -0.40539)
+
+[node name="slimev4" parent="ScrollArea" instance=ExtResource("9_w8tab")]
 position = Vector2(23, 217)
 collision_mask = 2
 script = ExtResource("10_2y2uo")
 
-[node name="SpikeFinal" parent="Areas" instance=ExtResource("11_af8pr")]
-position = Vector2(-30, 66)
+[node name="SpikeFinal" parent="ScrollArea" instance=ExtResource("11_af8pr")]
+position = Vector2(-182, 37)
 collision_mask = 2
 script = ExtResource("12_eakaq")
 
-[node name="GameFlag" parent="Areas" instance=ExtResource("13_gxrbk")]
+[node name="GameFlag" parent="ScrollArea" instance=ExtResource("13_gxrbk")]
 position = Vector2(365, 1169)
 scale = Vector2(0.3, 0.3)
 collision_mask = 2
 script = ExtResource("14_etasm")
 
-[node name="Coin2" parent="Areas" instance=ExtResource("7_lq1cs")]
-position = Vector2(31, -57)
-
-[node name="drawGrid" type="Node2D" parent="Areas"]
-script = ExtResource("15_p0u1m")
+[node name="Coin2" parent="ScrollArea" instance=ExtResource("7_lq1cs")]
+position = Vector2(-169, -15)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
@@ -134,9 +131,15 @@ metadata/_edit_use_anchors_ = true
 
 [node name="UI" parent="." instance=ExtResource("17_tkvw5")]
 
+[node name="areaboundary2" parent="." instance=ExtResource("18_0ppup")]
+position = Vector2(-57, -38)
+
+[node name="areaboundary3" parent="." instance=ExtResource("18_0ppup")]
+position = Vector2(89, -36)
+
 [connection signal="body_entered" from="KillZoneBorder" to="KillZoneBorder" method="_on_body_entered"]
 [connection signal="body_entered" from="KillZoneBorder2" to="KillZoneBorder2" method="_on_body_entered"]
-[connection signal="body_entered" from="Areas/slimev4" to="Areas/slimev4" method="_on_body_entered"]
-[connection signal="body_entered" from="Areas/SpikeFinal" to="Areas/SpikeFinal" method="_on_body_entered"]
-[connection signal="body_entered" from="Areas/GameFlag" to="Areas/GameFlag" method="_on_body_entered"]
-[connection signal="timeout" from="Timer" to="Areas" method="_on_spawn_timer_timeout"]
+[connection signal="body_entered" from="ScrollArea/slimev4" to="ScrollArea/slimev4" method="_on_body_entered"]
+[connection signal="body_entered" from="ScrollArea/SpikeFinal" to="ScrollArea/SpikeFinal" method="_on_body_entered"]
+[connection signal="body_entered" from="ScrollArea/GameFlag" to="ScrollArea/GameFlag" method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="ScrollArea" method="_on_spawn_timer_timeout"]
