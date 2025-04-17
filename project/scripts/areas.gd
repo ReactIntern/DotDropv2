@@ -9,89 +9,91 @@ var speed = 30
 var spawn_interval = 1.0
 var spawn_timer: Timer
 var spawned_positions = []
-var width
-var height
-var List = [platform, EnemyPlat]
-@onready var player: CharacterBody2D = $"../Player"
-var current_spawn_y = 0.0 
-@onready var timer: Timer = $"../Timer"
-var score = 0
 @onready var score_label: Label = $ScoreLabel
+
+
+@onready var main_camera: Camera2D = $"../MainCamera"
+@onready var delay_timer: Timer = $DelayTimer
+
+@export var grid_size := 16  # Try 32 for smaller cells
+@export var grid_color := Color(1, 1, 1, 0.2)
+@export var grid_width := 1.0
+@export var columns := 9
+@export var rows := 13
+@export var highlight_cell := Vector2i(1, 1)
+@export var highlight_color := Color(1, 0, 0, 0.3)  # Semi-transparent red
+# Position offset for objects (will move upward)
+var object_offset := Vector2(0, 0)
+var platforms = []
+var CanScroll = false
 var items = [
-	{"obj": EnemyPlat, "chance": 0.5},
-	{"obj": platform, "chance": 0.7},
-	#{"obj": Slime, "chance": 0.3},
-	{"obj": coin, "chance": 0.3}
-#{"obj": Blade, "chance": 0.1}
-	#{"obj": BreakPlat, "chance": 0.3}
-	#{"obj": , "chance": 0.}
+	{"obj": EnemyPlat, "chance": 0.5, "size": Vector2(16, 2)},
+	{"obj": platform, "chance": 0.7, "size": Vector2(4, 4)},
+	{"obj": coin, "chance": 0.3, "size": Vector2(4, 4)}
 ]
-#new code
-const GRID_CELL_SIZE = 64  # space between objects
-const ColsX = 5       # number of columns
-const RowsY = 12      # number of rows
-const GRID_OFFSET = Vector2(200, 250)  # where the grid starts in the world
+var grid_origin := Vector2i.ZERO
+var score = 0
 
-func generate_grid_positions(cell_size: int, cols: int, rows: int, offset: Vector2) -> Array:
-	var positions = []
-	for x in range(cols):
-		for y in range(rows):
-			var pos = Vector2(x * cell_size, y * cell_size) + offset
-			positions.append(pos)
-	return positions
+func _ready():
+	randomize()
+	center_on_camera()
+	var item = pick_weighted_item()
+	var grid_coords = Vector2i(1, 1)
+	var obj_scene = item["obj"]
+	var size = item["size"]
 
-func scale_object_to_screen(obj: Node2D, reference_size: Vector2):
-	var screen = get_viewport().get_visible_rect().size
-	var scale_factor = screen.x / reference_size.x
-	obj.scale = Vector2(scale_factor, scale_factor)
+	var new_obj = obj_scene.instantiate()
+	new_obj.position = get_aligned_grid_position(grid_coords, size)
+	
+	await get_tree().create_timer(5.0).timeout
+	print("20 seconds passed. Now go do the thing.")
+	add_child(new_obj)
+func _on_delay_timer_timeout(new_obj):
+	print("5 seconds passed. Do something now.")
+	add_child(new_obj)
+	# Your action here
+	
+
+				
+func get_aligned_grid_position(grid_coords: Vector2i, size: Vector2) -> Vector2:
+	var pos = grid_origin + grid_coords * grid_size
+	pos.x += (grid_size - size.x) / 2
+	pos.y += grid_size - size.y
+	return pos
+	
+func get_cell_rect(grid_coords: Vector2i) -> Rect2:
+	var top_left = Vector2i(grid_coords) * grid_size + grid_origin
+	return Rect2(top_left, Vector2i(grid_size, grid_size))
+	
+func center_on_camera():
+	var camera_center = main_camera.get_screen_center_position()
+	var grid_pixel_size = Vector2(columns * grid_size, rows * grid_size)
+	grid_origin = camera_center - (grid_pixel_size / 2)
+
+
+func spawn_on_grid(grid_coords: Vector2i, obj_scene: PackedScene):
+	var new_obj = obj_scene.instantiate()
+	new_obj.position = Vector2i(grid_coords) * grid_size + grid_origin
+	add_child(new_obj)
+
+func spawn_random_object():
+	var item = pick_weighted_item()
+	var grid_coords = Vector2i(randi() % columns, randi() % rows)
+	spawn_on_grid(grid_coords, item["obj"])
+
+func pick_weighted_item():
+	var total = 0.0
+	for i in items:
+		total += i.chance
+
+	var rand_val = randf() * total
+	var running_sum = 0.0
+	for i in items:
+		running_sum += i.chance
+		if rand_val <= running_sum:
+			return i
+	return items[0]  # fallback
 	
 func add_point():
 	score += 1
 	score_label.text = str(score) + " Coins"
-
-
-func is_position_clear(pos: Vector2, min_distance: float) -> bool:
-	for existing_pos in spawned_positions:
-		if pos.distance_to(existing_pos) < min_distance:
-			return false
-	return true
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	randomize()
-	screen_size = get_viewport().get_visible_rect().size
-	print("Screen size:", screen_size)
-	var grid_positions = generate_grid_positions(GRID_CELL_SIZE, ColsX, RowsY, GRID_OFFSET)
-	grid_positions.shuffle()
-
-	for i in range(min(12, grid_positions.size())):
-		var pos = grid_positions[i]
-
-		# Spawn platform
-		var new_platform = platform.instantiate()
-		scale_object_to_screen(new_platform, Vector2(560, 800))
-		add_child(new_platform)
-
-		# Maybe spawn a coin or enemy on it
-		if randi() % 2 == 0:
-			var obj = List.pick_random().instantiate()
-			obj.position = pos + Vector2(randf_range(-4, 4), randf_range(-4, 4))
-			add_child(obj)
-
-
-func _on_spawn_timer_timeout() -> void:
-	#randomize()
-	print('called')
-	var y= 0
-	#while y > -3000:
-	for i in range(12):
-		var new_platform = platform.instantiate()
-		new_platform.position = Vector2(randf_range(-60, 47),randf_range(65, 700))#randf_range(-60, 47), randf_range(-108, 86))
-		add_child(new_platform)
-	for i in range(3):
-		var new_coin = coin.instantiate()
-		new_coin.position = Vector2(randf_range(-60, 47),randf_range(65, 900))#randf_range(-60, 47), randf_range(-108, 86))
-		add_child(new_coin)
-		y -= randf_range(210, 500)
-		
-		
-	 # Replace with function body.

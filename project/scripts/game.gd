@@ -1,7 +1,7 @@
 extends Node2D
 var platform = preload('res://scenes/platformtwo.tscn')
 var EnemyPlat = preload('res://MiniScenesFolder/EnemyPlat.tscn')
-var speed = 0
+var speed = 43
 var platforms = []
 var CanScroll = false
 var List = [platform, EnemyPlat]

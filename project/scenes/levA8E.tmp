@@ -68,6 +68,13 @@ collision_mask = 1
 
 [node name="Areas" type="Node" parent="."]
 script = ExtResource("5_i0n7e")
+grid_size = null
+grid_color = null
+grid_width = null
+columns = null
+rows = null
+highlight_cell = null
+highlight_color = null
 
 [node name="StartPlatform" parent="Areas" instance=ExtResource("6_bljoy")]
 position = Vector2(-49, -21)
